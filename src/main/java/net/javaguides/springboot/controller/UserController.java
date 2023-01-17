@@ -36,6 +36,7 @@ public class UserController {
 
 	@PostMapping
 	public User createUser(@RequestBody User user) {
+		user.setRole("guest");
 		return this.userRepository.save(user);
 	}
 
