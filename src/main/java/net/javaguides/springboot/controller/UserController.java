@@ -14,7 +14,7 @@ import net.javaguides.springboot.exception.ResourceNotFoundException;
 import net.javaguides.springboot.repository.UserRepository;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins ="*", exposedHeaders = "Access-Control-Allow-Origin")
 @RequestMapping("/api/users")
 public class UserController {
 

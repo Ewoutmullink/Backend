@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import net.javaguides.springboot.exception.ResourceNotFoundException;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins ="*", exposedHeaders = "Access-Control-Allow-Origin")
 @RequestMapping("/api/product")
 public class ProductController {
 
@@ -25,8 +25,6 @@ public class ProductController {
 
     @Autowired
     private UserRepository userRepository;
-
-    Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @GetMapping
     public List<Product> getAllProducts() {
@@ -94,7 +92,7 @@ public class ProductController {
         return new ResponseEntity<>(productRequest, HttpStatus.CREATED);
 
     }
-    @DeleteMapping("/users/{userId}/tags/{productId}")
+    @DeleteMapping ("/{userId}/products/{productId}")
     public ResponseEntity<HttpStatus> deleteProductFromUser(@PathVariable(value = "userId") Long userId, @PathVariable(value = "productId") Long productId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found"));
@@ -102,7 +100,7 @@ public class ProductController {
         user.removeProduct(productId);
         userRepository.save(user);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
