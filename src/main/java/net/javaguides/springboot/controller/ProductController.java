@@ -75,11 +75,10 @@ public class ProductController {
 
     @PostMapping("/card/{userId}/")
     public ResponseEntity<Product> addTag(@PathVariable(value = "userId") Long userId, @RequestBody Product productRequest) {
-        logger.debug("wtffffff", "jnjjjnnjnj");
+
         Product product = this.userRepository.findById(userId).map(user -> {
             long productId = productRequest.getId();
-            logger.info("help");
-            // tag is existed
+
             if (productId != 0L) {
                 Product _tag = this.productRepository.findById(productId)
                         .orElseThrow(() -> new ResourceNotFoundException("Not found Tag with id = " + productId));
@@ -87,8 +86,7 @@ public class ProductController {
                 this.userRepository.save(user);
                 return _tag;
             }
-            logger.debug("wtffffff", "jnjjjnnjnj");
-            // add and create new Tag
+
             user.addProduct(productRequest);
             return this.productRepository.save(productRequest);
         }).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = "));
