@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import net.javaguides.springboot.exception.ResourceNotFoundException;
@@ -38,11 +39,13 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Product createProduct(@RequestBody Product product) {
         return this.productRepository.save(product);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Product updateProduct(@RequestBody Product product, @PathVariable ("id") long productId) {
         Product existingProduct = this.productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id :" + productId));
@@ -54,6 +57,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> deleteProduct(@PathVariable ("id") long userId){
         Product existingProduct = this.productRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id :" + userId));
@@ -68,12 +72,17 @@ public class ProductController {
         }
 
         List<Product> products = productRepository.findProductsByUsersId(userId);
+        products.forEach(product -> {
+            System.out.println(product.getId());
+            System.out.println("mm");
+        });
+
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @PostMapping("/card/{userId}/")
     public ResponseEntity<Product> addTag(@PathVariable(value = "userId") Long userId, @RequestBody Product productRequest) {
-
+        System.out.println("lol");
         Product product = this.userRepository.findById(userId).map(user -> {
             long productId = productRequest.getId();
 

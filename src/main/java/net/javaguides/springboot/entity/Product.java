@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,6 +38,15 @@ public class Product {
             mappedBy = "products")
     @JsonIgnore
     private Set<User> users = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "products")
+    @JsonIgnore
+    private Set<Order> orders = new HashSet<>();
 
     @JsonCreator
     public Product() {
